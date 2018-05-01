@@ -15,6 +15,7 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <boost/lexical_cast.hpp>
 #include <math.h> 
+#include <array>
 
 #define pi 3.14159265
 
@@ -23,10 +24,9 @@
 boost::random::mt19937 gen;
 using namespace std;
 
-typedef
-boost::multi_array < double, 1 > array_1d;
-boost::multi_array < double, 3 > array_3d;
-boost::multi_array < double, 2 > array_2d;
+//typedef std::array < std:array < double, 1 > array_1d;
+typedef boost::multi_array < double, 3 > array_3d;
+typedef boost::multi_array < double, 2 > array_2d;
 // typedef keyword allows you to create an alias fo a data type
 
 
@@ -39,10 +39,7 @@ unsigned int N_mc = 1e6;
 double beta=1;
 
 
-array_1d h(boost::extents[3]);
-h[0]=0;
-h[1]=0;
-h[2]=1;
+const std::array<double, 3> h = {1,2,3};
 
 //Function templates
 int roll_coin(int a, int b);
@@ -64,9 +61,9 @@ int main(int argc, char const * argv[])
 	//Read the random signed bonds for a particular stored realization
 	ifstream gin("J.dat");
 	
-        for (unsigned int comp1=0; comp<3; ++comp)
+        for (unsigned int comp1=0; comp1<3; ++comp1)
         {
-            for (unsigned int comp2=0; comp<3; ++comp)
+            for (unsigned int comp2=0; comp2<3; ++comp2)
             {  
 
 			gin>>J[comp1][comp2];
@@ -87,7 +84,7 @@ int main(int argc, char const * argv[])
 
 
 		// Create a 3d array that is comp*axis1 * axis2
-		array_3d sitespin(boost::extents[comp][axis1][axis2]);
+		array_3d sitespin(boost::extents[3][axis1][axis2]);
 
 		// stores the spin configuration of the system
 		//initial state chosen by random no. generator above
