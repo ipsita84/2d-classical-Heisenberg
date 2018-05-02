@@ -17,7 +17,7 @@
 #include <math.h> 
 #include <array>
 
-#define pi 3.14159265
+const double pi = acos(-1.0);
 
 // gen is a variable name
 // Its data-type is boost::random::mt19937
