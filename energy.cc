@@ -31,6 +31,7 @@ typedef boost::multi_array < double, 2 > array_2d;
 
 const unsigned int axis1 = 8, axis2 = axis1;
 // above assigns length along each dimension of the 2d configuration
+const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
 const unsigned int N_mc = 1e6;
@@ -88,8 +89,8 @@ int main(int argc, char const * argv[])
 		// stores the spin configuration of the system
 		//initial state chosen by random no. generator above
 		for (unsigned int i = 0; i < axis1; ++i)
-			for (unsigned int j = 0; j < axis2; ++j)
-                        {        double theta = roll_coin(0,pi);
+		{	for (unsigned int j = 0; j < axis2; ++j)
+                        {       double theta = roll_coin(0,pi);
                                 double phi = roll_coin(0,2*pi);
 				sitespin[0][i][j] = sin(theta)*cos(phi);
 				sitespin[1][i][j] = sin(theta)*sin(phi);
@@ -99,7 +100,7 @@ int main(int argc, char const * argv[])
 
 		double energy = energy_tot(sitespin, J);
 		double en_sum(0);
-		unsigned int sys_size = axis1 * axis2;
+
 
 		for (unsigned int i = 1; i <=1e5+N_mc; ++i)
 		{
@@ -228,9 +229,9 @@ double energy_tot(array_3d sitespin, array_2d J)
          }
 
 	//periodic boundary conditions
-	for (unsigned comp1  = 0; comp1 < 3; comp1)
+	for (unsigned comp1  = 0; comp1 < 3; ++comp1)
         {
-	    for (unsigned comp2  = 0; comp2 < 3; comp2)
+	    for (unsigned comp2  = 0; comp2 < 3; ++comp2)
             {
 	       for (unsigned int j = 0; j < axis2; ++j)
 		energy += J[comp1][comp2]*sitespin[comp1][axis1-1][j] * sitespin[comp2][0][j];
@@ -238,9 +239,9 @@ double energy_tot(array_3d sitespin, array_2d J)
          }
 
 
-	for (unsigned comp1  = 0; comp1 < 3; comp1)
+	for (unsigned comp1  = 0; comp1 < 3; ++comp1)
         {
-	    for (unsigned comp2  = 0; comp2 < 3; comp2)
+	    for (unsigned comp2  = 0; comp2 < 3; ++comp2)
             {
 
 	       for (unsigned int i = 0; i < axis1; ++i)
@@ -253,7 +254,7 @@ double energy_tot(array_3d sitespin, array_2d J)
 
 //Calculating interaction energy change for spin
 //at random site->(row,col) with its nearest neighbours
-double nn_energy(array_3d sitespin,  array_4d J, unsigned int row, unsigned int col)
+double nn_energy(array_3d sitespin,  array_2d J, unsigned int row, unsigned int col)
 {
 	double nn_en = 0;
 	for (unsigned comp1  = 0; comp1 < 3; ++comp1)
@@ -286,7 +287,7 @@ double nn_energy(array_3d sitespin,  array_4d J, unsigned int row, unsigned int 
 
 	      if (col == 0)
 	      {
-		nn_en += J[comp1][comp2]* sitespin[row][0] * sitespin[comp1][row][axis2-1];
+		nn_en += J[comp1][comp2]* sitespin[comp2][row][0] * sitespin[comp1][row][axis2-1];
 		nn_en += J[comp1][comp2]* sitespin[comp1][row][0] * sitespin[comp2][row][1];
 	      }
 
