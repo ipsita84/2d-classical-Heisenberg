@@ -264,7 +264,7 @@ double nn_energy(array_3d sitespin,  array_2d J, unsigned int row, unsigned int 
 
 	      if (col > 0 && col < axis2 - 1)
 	      {
-		nn_en += J[comp1][comp2]*sitespin[comp2][row][col] * sitespin[row][comp1][col-1];
+		nn_en += J[comp1][comp2]*sitespin[comp2][row][col] * sitespin[comp1][row][col-1];
 		nn_en += J[comp1][comp2]*sitespin[comp1][row][col] * sitespin[comp2][row][col+1];
 	      }
 
