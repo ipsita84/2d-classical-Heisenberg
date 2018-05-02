@@ -49,12 +49,7 @@ double nn_energy(array_3d sitespin,  array_2d J, unsigned int row, unsigned int 
 
 int main(int argc, char const * argv[])
 {
-	if (argc != 1)
-	{
-		cout << "Expecting one inputs: beta"
-		     << endl << "Got " << argc - 1 << endl;
-		return 1;
-	}
+
 
         array_2d J(boost::extents[3][3]);
         
@@ -125,10 +120,9 @@ int main(int argc, char const * argv[])
                                 double s0 = sitespin[0][row][col];
                                 double s1 = sitespin[1][row][col];
                                 double s2 = sitespin[2][row][col];
-				double energy_old =energy_tot(sitespin,J) ;
+				double energy_old =energy ;
 				double energy_minus_rnd_site =energy_old - nn_energy(sitespin,J, row, col);
-				//Generate a random no. r such that 0 < r < 1
-			        double r =  random_real(0, 1) ;			
+		
 				
 				
 				double r1 = 0.5*random_real(0, 1)/beta;
@@ -144,7 +138,8 @@ int main(int argc, char const * argv[])
                                 double energy_diff = energy_new - energy_old;
 				double acc_ratio = exp(-1.0 * energy_diff* beta);
  
-
+				//Generate a random no. r such that 0 < r < 1
+			        double r =  random_real(0, 1) ;	
 				//Spin flipped if r <= acceptance ratio
 
 				if (r <= acc_ratio)
