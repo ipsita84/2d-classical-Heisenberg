@@ -34,49 +34,45 @@ const unsigned int axis1 = 8, axis2 = axis1;
 const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e5;
+const unsigned int N_mc = 1e6;
 
 const double beta=1;
-
-
-const std::array <double, 3> h={0,0,1};
 
 //Function templates
 int roll_coin(int a, int b);
 double random_real(int a, int b);
-double energy_tot(array_3d sitespin, array_2d J);
-double nn_energy(array_3d sitespin,  array_2d J, unsigned int row, unsigned int col);
+double energy_tot(array_3d sitespin, array_2d J, std::array <double, 3> h);
+double nn_energy(array_3d sitespin,  array_2d J, std::array <double, 3> h, unsigned int row, unsigned int col);
 
 int main(int argc, char const * argv[])
 {
 
 
         array_2d J(boost::extents[3][3]);
-        
+        double mx=0, my=0, mz=0;
+        std::array <double, 3> h = {0,0,0};
+
 	//Read the random signed bonds for a particular stored realization
 	ifstream gin("J.dat");
-	
-        for (unsigned int comp1=0; comp1<3; ++comp1)
-        {
-            for (unsigned int comp2=0; comp2<3; ++comp2)
-            {  
+  	ofstream f1out("mag.dat");	// Opens a file for output
+	ofstream fout("Energy.dat");	// Opens a file for output
+
+        for (unsigned int hsteps=0; hsteps<1001; ++hsteps)
+        {    h[2] = h[2] + 0.1;
+
+             for (unsigned int comp1=0; comp1<3; ++comp1)
+             {
+                for (unsigned int comp2=0; comp2<3; ++comp2)
+                {  
 
 			gin>>J[comp1][comp2];
 			
 		    
-	     }
-         }
-
+	         }
+              }
 	gin.close();
 
-
-
-
-//	cout << "Enter beta" << endl;
-//	cin >> beta;
-
-	ofstream fout("Energy.dat");	// Opens a file for output
-        ofstream gout("test.dat");	// Opens a file for output
+ //       ofstream gout("test.dat");	// Opens a file for output
 
 
 		// Create a 3d array that is comp*axis1 * axis2
@@ -94,7 +90,7 @@ int main(int argc, char const * argv[])
                          }
                 }  
 
-		double energy = energy_tot(sitespin, J);
+		double energy = energy_tot(sitespin, J, h);
 		double en_sum(0);
 
 
@@ -122,7 +118,7 @@ int main(int argc, char const * argv[])
                                 double s1 = sitespin[1][row][col];
                                 double s2 = sitespin[2][row][col];
 				double energy_old =energy ;
-				double energy_minus_rnd_site =energy_old - nn_energy(sitespin,J, row, col);
+				double energy_minus_rnd_site =energy_old - nn_energy(sitespin,J,h, row, col);
 		
 				
 				
@@ -135,7 +131,7 @@ int main(int argc, char const * argv[])
                                 sitespin[0][row][col] = (s0+r1)/tot;
                                 sitespin[1][row][col] = (s1+r2)/tot;
                                 sitespin[2][row][col]= (s2+r3)/tot;
-                                double energy_new = energy_minus_rnd_site +  nn_energy(sitespin,J, row, col);
+                                double energy_new = energy_minus_rnd_site +  nn_energy(sitespin,J, h,row, col);
                                 double energy_diff = energy_new - energy_old;
 				double acc_ratio = exp(-1.0 * energy_diff* beta);
  
@@ -159,16 +155,33 @@ int main(int argc, char const * argv[])
 			}
 
 			if (i > 1e5){ en_sum += energy;
-                                      gout << i<< '\t'  << energy  << endl;}
+                                     // gout << i<< '\t'  << energy  << endl;
+                                    }
 		}
 
-		fout << beta
-		     << '\t' << en_sum / N_mc << endl;
 
-        gout.close();
-	fout.close();
+        for (unsigned int i = 0; i < axis1; ++i)
+	{	for (unsigned int j = 0; j < axis2; ++j)
+                {       
+				mx += sitespin[0][i][j] ;
+				my += sitespin[1][i][j] ;
+				mz += sitespin[2][i][j] ;
+                 }
+        }
+
+	fout << h[2] << '\t' << en_sum / N_mc << endl;
+
+  //      gout.close();
+     
+        f1out << h[2] << '\t' << mx/sys_size << '\t' <<  my/sys_size << '\t' <<  mz/sys_size << endl;
+ }
+        fout.close();
+	f1out.close();
 	return 0;
 }
+
+
+
 
 //function to generate random integer
 // between 2 integers a & b, including a & b
@@ -193,7 +206,7 @@ double random_real(int a, int b)
 //for a given spin configuration
 //with periodic boundary conditions
 
-double energy_tot(array_3d sitespin, array_2d J)
+double energy_tot(array_3d sitespin, array_2d J, std::array <double, 3> h)
 {
 	double energy = 0;
 	
@@ -251,7 +264,7 @@ double energy_tot(array_3d sitespin, array_2d J)
 
 //Calculating interaction energy change for spin
 //at random site->(row,col) with its nearest neighbours
-double nn_energy(array_3d sitespin,  array_2d J, unsigned int row, unsigned int col)
+double nn_energy(array_3d sitespin,  array_2d J, std::array <double, 3> h, unsigned int row, unsigned int col)
 {
 	double nn_en = 0;
 	for (unsigned comp1  = 0; comp1 < 3; ++comp1)
