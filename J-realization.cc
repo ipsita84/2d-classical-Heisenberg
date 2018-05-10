@@ -1,4 +1,4 @@
-// g++ -Wall -O3 J-realization.cc -o testo
+//  g++ -std=c++11 -Wall -O3 J-realization.cc -o testo
 
 #include <iostream>
 #include <fstream>
@@ -28,17 +28,17 @@ int main()
 	ofstream gout("J.dat");	// Opens a file for output
 
 
-	J[0][0] = -0.9;
-        J[1][1] = -0.9;
-        J[2][2] = -1.0;
+	J[0][0] = -0.1*200;
+        J[1][1] = -0.1*200;
+        J[2][2] = -1.0*200;
 
 
-  	J[0][1] = -0.1;
-        J[1][0] = -0.2;
-  	J[0][2] = -0.12;
-        J[2][0] = -0.21;
-  	J[2][1] = -0.3;
-        J[1][2] = -0.0;
+  	J[0][1] = -0.1*200;
+        J[1][0] = -0.2*200;
+  	J[0][2] = -0.12*200;
+        J[2][0] = -0.21*200;
+  	J[2][1] = -0.3*200;
+        J[1][2] = -0.08*200;
 
 for (unsigned int i = 0; i < 3; ++i)
 	{
