@@ -34,7 +34,7 @@ const unsigned int axis1 = 8, axis2 = axis1;
 const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e6;
+const unsigned int N_mc = 1e5;
 
 const double beta=1;
 
@@ -76,6 +76,7 @@ int main(int argc, char const * argv[])
 //	cin >> beta;
 
 	ofstream fout("Energy.dat");	// Opens a file for output
+        ofstream gout("test.dat");	// Opens a file for output
 
 
 		// Create a 3d array that is comp*axis1 * axis2
@@ -157,13 +158,14 @@ int main(int argc, char const * argv[])
 				}
 			}
 
-			if (i > 1e5) en_sum += energy;
+			if (i > 1e5){ en_sum += energy;
+                                      gout << i<< '\t'  << energy  << endl;}
 		}
 
 		fout << beta
 		     << '\t' << en_sum / N_mc << endl;
 
-
+        gout.close();
 	fout.close();
 	return 0;
 }
