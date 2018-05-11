@@ -216,7 +216,7 @@ double energy_tot(array_3d sitespin, array_2d J, std::array <double, 3> h)
 	       {
 		     for (unsigned int j = 0; j < axis2 ; ++j)
 		     {
-			energy += h[comp]*sitespin[comp][i][j];
+			energy += -h[comp]*sitespin[comp][i][j];
 		     }
 	        }
              
@@ -262,11 +262,20 @@ double energy_tot(array_3d sitespin, array_2d J, std::array <double, 3> h)
 	return energy;
 }
 
-//Calculating interaction energy change for spin
+//Calculating interaction & on-site energy change for spin
 //at random site->(row,col) with its nearest neighbours
 double nn_energy(array_3d sitespin,  array_2d J, std::array <double, 3> h, unsigned int row, unsigned int col)
 {
 	double nn_en = 0;
+
+      // Calculate the on-site energy
+      	for (unsigned comp  = 0; comp < 3; ++comp)
+
+	{   
+			energy += -h[comp]*sitespin[comp][row][col];
+             
+        }
+
 	for (unsigned comp1  = 0; comp1 < 3; ++comp1)
         {
 	    for (unsigned comp2  = 0; comp2 < 3; ++comp2)
