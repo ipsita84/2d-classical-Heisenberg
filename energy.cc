@@ -122,9 +122,9 @@ int main(int argc, char const * argv[])
 		
 				
 				
-				double r1 = 0.5*random_real(0, 1)/beta;
-				double r2 = 0.5*random_real(0, 1)/beta;
-				double r3 = 0.5*random_real(0, 1)/beta;
+				double r1 = 0.5*random_real(0, 1)/200;
+				double r2 = 0.5*random_real(0, 1)/200;
+				double r3 = 0.5*random_real(0, 1)/200;
  
                                  
                                 double tot = sqrt( pow( s0+ r1, 2)+pow( s1+ r1, 2)+pow(s2 + r1, 2) );
@@ -272,7 +272,7 @@ double nn_energy(array_3d sitespin,  array_2d J, std::array <double, 3> h, unsig
       	for (unsigned comp  = 0; comp < 3; ++comp)
 
 	{   
-			energy += -h[comp]*sitespin[comp][row][col];
+			nn_en += -h[comp]*sitespin[comp][row][col];
              
         }
 
