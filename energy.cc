@@ -57,8 +57,7 @@ int main(int argc, char const * argv[])
   	ofstream f1out("mag.dat");	// Opens a file for output
 	ofstream fout("Energy.dat");	// Opens a file for output
 
-        for (unsigned int hsteps=0; hsteps<1001; ++hsteps)
-        {    h[2] = h[2] + 0.1;
+
 
              for (unsigned int comp1=0; comp1<3; ++comp1)
              {
@@ -89,9 +88,14 @@ int main(int argc, char const * argv[])
 				sitespin[2][i][j] = cos(theta);
                          }
                 }  
+       double energy(0);
+       double en_sum;
 
-		double energy = energy_tot(sitespin, J, h);
-		double en_sum(0);
+       for (unsigned int hsteps=0; hsteps<1001; ++hsteps)
+        {    h[2] = h[2] + 0.1;
+
+		energy = energy_tot(sitespin, J, h);
+		en_sum =0;
 
 
 		for (unsigned int i = 1; i <=1e5+N_mc; ++i)
