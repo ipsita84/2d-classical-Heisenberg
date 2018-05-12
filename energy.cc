@@ -86,16 +86,18 @@ int main(int argc, char const * argv[])
 				sitespin[0][i][j] = sin(theta)*cos(phi);
 				sitespin[1][i][j] = sin(theta)*sin(phi);
 				sitespin[2][i][j] = cos(theta);
+                                //double s= pow(sitespin[0][i][j],2)+pow(sitespin[1][i][j],2) +pow(sitespin[2][i][j],2);
+                                //cout << s << endl ; 
                          }
                 }  
        double energy(0);
        double en_sum;
 
        for (unsigned int hsteps=0; hsteps<1001; ++hsteps)
-        {    h[2] = h[2] + 0.1;
+        {    h[2] = hsteps*0.1;
 
 		energy = energy_tot(sitespin, J, h);
-		en_sum =0;
+		en_sum =0; 
 
 
 		for (unsigned int i = 1; i <=1e5+N_mc; ++i)
@@ -126,9 +128,9 @@ int main(int argc, char const * argv[])
 		
 				
 				
-				double r1 = 0.5*random_real(0, 1)/200;
-				double r2 = 0.5*random_real(0, 1)/200;
-				double r3 = 0.5*random_real(0, 1)/200;
+				double r1 = 0.5*random_real(0, 1)/beta;
+				double r2 = 0.5*random_real(0, 1)/beta;
+				double r3 = 0.5*random_real(0, 1)/beta;
  
                                  
                                 double tot = sqrt( pow( s0+ r1, 2)+pow( s1+ r1, 2)+pow(s2 + r1, 2) );
@@ -137,7 +139,7 @@ int main(int argc, char const * argv[])
                                 sitespin[2][row][col]= (s2+r3)/tot;
                                 double energy_new = energy_minus_rnd_site +  nn_energy(sitespin,J, h,row, col);
                                 double energy_diff = energy_new - energy_old;
-				double acc_ratio = exp(-1.0 * energy_diff* beta);
+				double acc_ratio = exp(-1.0 * energy_diff* beta/200);
  
 				//Generate a random no. r such that 0 < r < 1
 			        double r =  random_real(0, 1) ;	
@@ -163,7 +165,7 @@ int main(int argc, char const * argv[])
                                     }
 		}
 
-
+        mx=0; my=0; mz=0;
         for (unsigned int i = 0; i < axis1; ++i)
 	{	for (unsigned int j = 0; j < axis2; ++j)
                 {       
