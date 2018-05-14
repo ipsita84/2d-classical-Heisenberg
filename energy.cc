@@ -29,7 +29,7 @@ typedef boost::multi_array < double, 2 > array_2d;
 // typedef keyword allows you to create an alias fo a data type
 
 
-const unsigned int axis1 = 8, axis2 = axis1;
+const unsigned int axis1 = 10, axis2 = axis1;
 // above assigns length along each dimension of the 2d configuration
 const unsigned int sys_size = axis1 * axis2;
 
@@ -71,7 +71,7 @@ int main(int argc, char const * argv[])
               }
 	gin.close();
 
- //       ofstream gout("test.dat");	// Opens a file for output
+      ofstream gout("test.dat");	// Opens a file for output
 
 
 		// Create a 3d array that is comp*axis1 * axis2
@@ -92,8 +92,9 @@ int main(int argc, char const * argv[])
                 }  
        double energy(0);
        double en_sum;
+       unsigned int moves_accepted(0);
 
-       for (unsigned int hsteps=0; hsteps<1001; ++hsteps)
+       for (unsigned int hsteps=0; hsteps<1; ++hsteps)
         {    h[2] = hsteps*0.1;
 
 		energy = energy_tot(sitespin, J, h);
@@ -116,7 +117,7 @@ int main(int argc, char const * argv[])
 				else
 				{
 					col = label % axis2 - 1;
-					row = (label-col-1)/axis2;
+               				row = (label-col-1)/axis2;
 				}
 
 
@@ -148,6 +149,8 @@ int main(int argc, char const * argv[])
 				if (r <= acc_ratio)
 				{
 					energy = energy_new ;
+                                        moves_accepted = moves_accepted +1;
+                                       // cout << "energy changed" <<endl;
 				}
 
 				if (r > acc_ratio)
@@ -158,10 +161,12 @@ int main(int argc, char const * argv[])
 					energy = energy_old ;
 
 				}
+                        //gout << i+j << '\t'  << energy << '\t' << moves_accepted << endl;
 			}
 
 			if (i > 1e5){ en_sum += energy;
-                                     // gout << i<< '\t'  << energy  << endl;
+                                    double rat  = 1.0* moves_accepted/(i*sys_size);
+                                    gout<< i*sys_size <<'\t'<< energy <<'\t'<< rat << endl;
                                     }
 		}
 
@@ -177,7 +182,7 @@ int main(int argc, char const * argv[])
 
 	fout << h[2] << '\t' << en_sum / N_mc << endl;
 
-  //      gout.close();
+        gout.close();
      
         f1out << h[2] << '\t' << mx/sys_size << '\t' <<  my/sys_size << '\t' <<  mz/sys_size << endl;
  }
