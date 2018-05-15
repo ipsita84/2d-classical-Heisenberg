@@ -54,8 +54,8 @@ int main(int argc, char const * argv[])
 
 	//Read the random signed bonds for a particular stored realization
 	ifstream gin("J.dat");
-  	ofstream f1out("mag.dat");	// Opens a file for output
-	ofstream fout("Energy.dat");	// Opens a file for output
+  	ofstream f1out("mag.dat",std::fstream::app);	// Opens a file for output
+	ofstream fout("Energy.dat", std::fstream::app);	// Opens a file for output
 
 
 
@@ -94,8 +94,8 @@ int main(int argc, char const * argv[])
        double en_sum;
        unsigned int moves_accepted(0);
 
-       for (unsigned int hsteps=0; hsteps<1; ++hsteps)
-        {    h[2] = hsteps*0.1;
+       for (unsigned int hsteps=1; hsteps<101; ++hsteps)
+        {    h[2] = 20+hsteps*0.5;
 
 		energy = energy_tot(sitespin, J, h);
 		en_sum =0; 
@@ -165,8 +165,8 @@ int main(int argc, char const * argv[])
 			}
 
 			if (i > 1e5){ en_sum += energy;
-                                    double rat  = 1.0* moves_accepted/(i*sys_size);
-                                    gout<< i*sys_size <<'\t'<< energy <<'\t'<< rat << endl;
+                                    //double rat  = 1.0* moves_accepted/(i*sys_size);
+                                    //gout<< i*sys_size <<'\t'<< energy <<'\t'<< rat << endl;
                                     }
 		}
 
