@@ -22,7 +22,7 @@ int main(int argc, char const * argv[])
 	
 	double en_avg(0);
 	double en_square_avg(0);
-        for (unsigned int i=1; i < N_mc+1; ++i )
+        for (unsigned int i=0; i < N_mc; ++i )
         {
 			en_square_avg = en_square_avg + energy[i]*energy[i];
 			en_avg = en_avg + energy[i];
@@ -32,11 +32,11 @@ int main(int argc, char const * argv[])
          en_square_avg = en_square_avg / N_mc ;
          
         double autosum(0); 
-        for (unsigned int i=1; i < N_mc+1; ++i )
+        for (unsigned int i=0; i < N_mc; ++i )
         {
         
                double sum(0);
-               for (unsigned int j=1+i;j < N_mc+1 -i; ++j )
+               for (unsigned int j=1+i;j < N_mc -i; ++j )
                {
 			sum += energy[j]*energy[j+i] - en_square_avg ;
 
@@ -47,6 +47,10 @@ int main(int argc, char const * argv[])
          
         double autocorr_time =  autosum / (en_square_avg - en_avg * en_avg);
         cout << autocorr_time;
+
+       	ofstream fout("0.dat", std::fstream::app);	// Opens a file for output
+        fout << autocorr_time << endl;
+        fout.close();
 
 	return 0;
 }

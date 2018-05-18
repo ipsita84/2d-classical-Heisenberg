@@ -34,7 +34,7 @@ const unsigned int axis1 = 10, axis2 = axis1;
 const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e6;
+const unsigned int N_mc = 1e7;
 
 const double beta=1;
 
@@ -94,7 +94,7 @@ int main(int argc, char const * argv[])
        double en_sum;
        unsigned int moves_accepted(0);
 
-       for (unsigned int hsteps=1; hsteps<101; ++hsteps)
+       for (unsigned int hsteps=1; hsteps<2; ++hsteps)
         {    h[2] = 20+hsteps*0.5;
 
 		energy = energy_tot(sitespin, J, h);
@@ -166,7 +166,7 @@ int main(int argc, char const * argv[])
 
 			if (i > 1e5){ en_sum += energy;
                                     //double rat  = 1.0* moves_accepted/(i*sys_size);
-                                    //gout<< i*sys_size <<'\t'<< energy <<'\t'<< rat << endl;
+                                    gout<< energy << endl;
                                     }
 		}
 
