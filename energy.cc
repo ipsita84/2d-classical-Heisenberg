@@ -163,6 +163,7 @@ int main(int argc, char const * argv[])
 	fout << h[2] << '\t' << en_sum / N_mc << endl;  
         f1out << h[2] << '\t' << mx/(sys_size*N_mc) << '\t' <<  my/(sys_size*N_mc) << '\t' 
         <<  mz/(sys_size*N_mc) << endl;
+        mx=0; my=0;mz=0;
         }
         
         //gout.close();
