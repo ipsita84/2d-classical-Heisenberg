@@ -34,7 +34,7 @@ const unsigned int axis1 = 10, axis2 = axis1;
 const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e5;
+const unsigned int N_mc = 1e7;
 
 const double beta=1;
 
@@ -73,13 +73,11 @@ int main(int argc, char const * argv[])
 
       //ofstream gout("test.dat");	// Opens a file for output
 
-
-		// Create a 3d array that is comp*axis1 * axis2
-		array_3d sitespin(boost::extents[3][axis1][axis2]);
+        array_3d sitespin(boost::extents[3][axis1][axis2]);
 
 		// stores the spin configuration of the system
 		//initial state chosen by random no. generator above
-		for (unsigned int i = 0; i < axis1; ++i)
+	for (unsigned int i = 0; i < axis1; ++i)
 		{	for (unsigned int j = 0; j < axis2; ++j)
                         {       double theta = roll_coin(0,pi);
                                 double phi = roll_coin(0,2*pi);
@@ -134,12 +132,9 @@ int main(int argc, char const * argv[])
 			        double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
 				//Spin flipped if r <= acceptance ratio
 				if (r <= acc_ratio)
-				{
-					energy = energy_new ;
-                                        moves_accepted = moves_accepted +1;
-                                       // cout << "energy changed" <<endl;
+				{ energy = energy_new ;
+                                        moves_accepted = moves_accepted +1;// cout << "energy changed" <<endl;
 				}
-
 				if (r > acc_ratio)
 				{
 					sitespin[0][row][col] = s0;
@@ -154,8 +149,8 @@ int main(int argc, char const * argv[])
 			if (i > 1e5){ en_sum += energy;
                                     //double rat  = 1.0* moves_accepted/(i*sys_size);
                                     //gout<< energy << endl;
-                                            for (unsigned int l = 0; l < axis1; ++i)
-	                                    {	for (unsigned int j = 0; j < axis2; ++j)
+                                       for (unsigned int l = 0; l < axis1; ++l)
+	                             	 {	for (unsigned int j = 0; j < axis2; ++j)
                                                 {       
 			                        	mx += sitespin[0][l][j] ;
 							my += sitespin[1][l][j] ;
@@ -163,8 +158,8 @@ int main(int argc, char const * argv[])
                  				}
        					     }
 
-                                    }
-		}
+                                      }
+		  }
 	fout << h[2] << '\t' << en_sum / N_mc << endl;  
         f1out << h[2] << '\t' << mx/(sys_size*N_mc) << '\t' <<  my/(sys_size*N_mc) << '\t' 
         <<  mz/(sys_size*N_mc) << endl;
