@@ -51,6 +51,7 @@ int main(int argc, char const * argv[])
         array_2d J(boost::extents[3][3]);
         double mx=0, my=0, mz=0;
         std::array <double, 3> h = {0,0,0};
+        std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 
 	//Read the random signed bonds for a particular stored realization
 	ifstream gin("J.dat");
@@ -146,23 +147,34 @@ int main(int argc, char const * argv[])
                         //gout << i+j << '\t'  << energy << '\t' << moves_accepted << endl;
 			}
 
-			if (i > 1e5){ en_sum += energy;
+			if (i > 1e5){ en_sum += energy; energy_array[i-1e5 -1] = energy;
                                     //double rat  = 1.0* moves_accepted/(i*sys_size);
                                     //gout<< energy << endl;
                                        for (unsigned int l = 0; l < axis1; ++l)
-	                             	 {	for (unsigned int j = 0; j < axis2; ++j)
+	                             	   {	for (unsigned int j = 0; j < axis2; ++j)
                                                 {       
-			                        	mx += sitespin[0][l][j] ;
-							my += sitespin[1][l][j] ;
-							mz += sitespin[2][l][j] ;
-                 				}
-       					     }
+			                        	          mx += sitespin[0][l][j] ; mx_array[i-1e5 -1] += sitespin[0][l][j] ;
+							                      my += sitespin[1][l][j] ; my_array[i-1e5 -1] += sitespin[1][l][j] ;
+							                      mz += sitespin[2][l][j] ; mz_array[i-1e5 -1] += sitespin[2][l][j] ;
+                 				                 }
+       					                }
 
-                                      }
+                        }
 		  }
-	fout << h[2] << '\t' << en_sum / N_mc << endl;  
-        f1out << h[2] << '\t' << mx/(sys_size*N_mc) << '\t' <<  my/(sys_size*N_mc) << '\t' 
-        <<  mz/(sys_size*N_mc) << endl;
+		  
+		  
+	double sigma_en = 0, sigma_mx = 0, sigma_my = 0, sigma_mz = 0;  
+    for (unsigned i=0; i< N_mc; i++)
+      {  sigma_en + = (energy_array[i] - en_sum) * (energy_array[i] - en_sum) ;
+		 sigma_mx + = (mx_array[i] - mx) * (mx_array[i] - mx) ; 
+		 sigma_my + = (my_array[i] - my) * (my_array[i] - my) ; 
+		 sigma_mz + = (mz_array[i] - my) * (mz_array[i] - mz) ;
+	  }
+    		  
+	fout << h[2] << '\t' << en_sum / N_mc << '\t' << sqrt(sigma_en) / N_mc << endl; // printing energy to file "Energy.dat"
+    f1out << h[2] << '\t' << mx/(sys_size*N_mc) << '\t' <<  my/(sys_size*N_mc) << '\t' 
+        <<  mz/(sys_size*N_mc) << '\t' << sqrt(sigma_mx)/(sys_size*N_mc)<< '\t' << sqrt(sigma_my)/(sys_size*N_mc)
+        << '\t' << sqrt(sigma_mz)/(sys_size*N_mc)  << endl;// printing magnetization to file "mag.dat"
         mx=0; my=0;mz=0;
         }
         
