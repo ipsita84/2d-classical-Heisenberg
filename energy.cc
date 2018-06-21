@@ -34,7 +34,7 @@ const unsigned int axis1 = 10, axis2 = axis1;
 const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e7;
+const unsigned int N_mc = 1e5;
 
 const double beta=1;
 
@@ -165,10 +165,10 @@ int main(int argc, char const * argv[])
 		  
 	double sigma_en = 0, sigma_mx = 0, sigma_my = 0, sigma_mz = 0;  
     for (unsigned i=0; i< N_mc; i++)
-      {  sigma_en + = (energy_array[i] - en_sum) * (energy_array[i] - en_sum) ;
-		 sigma_mx + = (mx_array[i] - mx) * (mx_array[i] - mx) ; 
-		 sigma_my + = (my_array[i] - my) * (my_array[i] - my) ; 
-		 sigma_mz + = (mz_array[i] - my) * (mz_array[i] - mz) ;
+      {  sigma_en += (energy_array[i] - en_sum/ N_mc) * (energy_array[i] - en_sum/ N_mc) ;
+		 sigma_mx += (mx_array[i] - mx/ N_mc) * (mx_array[i] - mx/ N_mc) ; 
+		 sigma_my += (my_array[i] - my/ N_mc) * (my_array[i] - my/ N_mc) ; 
+		 sigma_mz += (mz_array[i] - my/ N_mc) * (mz_array[i] - mz/ N_mc) ;
 	  }
     		  
 	fout << h[2] << '\t' << en_sum / N_mc << '\t' << sqrt(sigma_en) / N_mc << endl; // printing energy to file "Energy.dat"
