@@ -24,21 +24,30 @@ boost::multi_array < double, 2 > array_2d;
 int main()
 {
 	array_2d J(boost::extents[3][3]);
+	double j_isotropic =- 20;
+	double sym1 = -200 ;
+	double sym2 = -0 ;
+	double sym3 = -0 ;
+	double antisym1 = -0 ;
+	double antisym2 = -0 ;
+	double antisym3 = -0 ;
 
-	ofstream gout("J.dat");	// Opens a file for output
+	ofstream gout("J1.dat");	// Opens a file for output
 
 
-	J[0][0] = -0.1*200;
-        J[1][1] = -0.1*200;
-        J[2][2] = -1.0*200;
+	J[0][0] = j_isotropic ;
+    J[1][1] = j_isotropic ;
+    J[2][2] = j_isotropic ;
 
 
-  	J[0][1] = -0.1*200;
-        J[1][0] = -0.2*200;
-  	J[0][2] = -0.12*200;
-        J[2][0] = -0.21*200;
-  	J[2][1] = -0.3*200;
-        J[1][2] = -0.08*200;
+  	J[0][1] = sym1 +antisym1 ;
+    J[1][0] = sym1 - antisym1 ;
+    
+  	J[0][2] = sym2 +antisym2 ;   
+    J[2][0] = sym2 - antisym2 ;
+   
+  	J[2][1] = sym3 + antisym3 ;
+    J[1][2] =  sym3 - antisym3;
 
 for (unsigned int i = 0; i < 3; ++i)
 	{
