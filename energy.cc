@@ -54,10 +54,9 @@ int main(int argc, char const * argv[])
         std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 
 	//Read the random signed bonds for a particular stored realization
-	ifstream gin("J.dat");
-  	ofstream f1out("mag.dat",std::fstream::app);	// Opens a file for output
-	ofstream fout("Energy.dat", std::fstream::app);	// Opens a file for output
-
+	ifstream gin("J1.dat");
+  	ofstream f1out("mag1.dat",std::fstream::app);	// Opens a file for output
+	ofstream fout("Energy1.dat", std::fstream::app);
 
 
              for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -94,7 +93,7 @@ int main(int argc, char const * argv[])
        unsigned int moves_accepted(0);
 
        for (unsigned int hsteps=0; hsteps<1000; ++hsteps)
-        {    h[2] = 20 + hsteps*0.5; energy = energy_tot(sitespin, J, h);
+        {    h[0] = 20 + hsteps*0.5; energy = energy_tot(sitespin, J, h);
 	     en_sum =0; 
 
 		for (unsigned int i = 1; i <=1e5+N_mc; ++i)
@@ -115,22 +114,23 @@ int main(int argc, char const * argv[])
 					col = label % axis2 - 1;
                				row = (label-col-1)/axis2;
 				}
-                                double s0 = sitespin[0][row][col];
-                                double s1 = sitespin[1][row][col];
-                                double s2 = sitespin[2][row][col];
+                double s0 = sitespin[0][row][col];
+                double s1 = sitespin[1][row][col];
+                double s2 = sitespin[2][row][col];
 				double energy_old =energy ;
 				double energy_minus_rnd_site =energy_old - nn_energy(sitespin,J,h, row, col);
 				double r1 = 0.5*random_real(0, 1)/beta;
 				double r2 = 0.5*random_real(0, 1)/beta;
 				double r3 = 0.5*random_real(0, 1)/beta;                                
-                                double tot = sqrt( pow( s0+ r1, 2)+pow( s1+ r1, 2)+pow(s2 + r1, 2) );
-                                sitespin[0][row][col] = (s0+r1)/tot;
-                                sitespin[1][row][col] = (s1+r2)/tot;
-                                sitespin[2][row][col]= (s2+r3)/tot;
-                                double energy_new = energy_minus_rnd_site +  nn_energy(sitespin,J, h,row, col);
-                                double energy_diff = energy_new - energy_old;
+                double tot = sqrt( pow( s0+ r1, 2)+pow( s1+ r1, 2)+pow(s2 + r1, 2) );
+                
+                sitespin[0][row][col] = (s0+r1)/tot;
+                sitespin[1][row][col] = (s1+r2)/tot;
+                sitespin[2][row][col]= (s2+r3)/tot;
+                double energy_new = energy_minus_rnd_site +  nn_energy(sitespin,J, h,row, col);
+                double energy_diff = energy_new - energy_old;
 				double acc_ratio = exp(-1.0 * energy_diff* beta/200);			
-			        double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
+			    double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
 				//Spin flipped if r <= acceptance ratio
 				if (r <= acc_ratio)
 				{ energy = energy_new ;
@@ -153,9 +153,12 @@ int main(int argc, char const * argv[])
                                        for (unsigned int l = 0; l < axis1; ++l)
 	                             	   {	for (unsigned int j = 0; j < axis2; ++j)
                                                 {       
-			                        	          mx += sitespin[0][l][j] ; mx_array[i-1e5 -1] += sitespin[0][l][j] ;
-							                      my += sitespin[1][l][j] ; my_array[i-1e5 -1] += sitespin[1][l][j] ;
-							                      mz += sitespin[2][l][j] ; mz_array[i-1e5 -1] += sitespin[2][l][j] ;
+			                        	          mx += sitespin[0][l][j] ; 
+			                        	          mx_array[i-1e5 -1] += sitespin[0][l][j] ;
+							                      my += sitespin[1][l][j] ; 
+							                      my_array[i-1e5 -1] += sitespin[1][l][j] ;
+							                      mz += sitespin[2][l][j] ; 
+							                      mz_array[i-1e5 -1] += sitespin[2][l][j] ;
                  				                 }
        					                }
 
@@ -171,15 +174,20 @@ int main(int argc, char const * argv[])
 		 sigma_mz += (mz_array[i] - my/ N_mc) * (mz_array[i] - mz/ N_mc) ;
 	  }
     		  
-	fout << h[2] << '\t' << en_sum / N_mc << '\t' << sqrt(sigma_en) / N_mc << endl; // printing energy to file "Energy.dat"
-    f1out << h[2] << '\t' << mx/(sys_size*N_mc) << '\t' <<  my/(sys_size*N_mc) << '\t' 
-        <<  mz/(sys_size*N_mc) << '\t' << sqrt(sigma_mx)/(sys_size*N_mc)<< '\t' << sqrt(sigma_my)/(sys_size*N_mc)
-        << '\t' << sqrt(sigma_mz)/(sys_size*N_mc)  << endl;// printing magnetization to file "mag.dat"
-        mx=0; my=0;mz=0;
+	fout << h[0] << '\t' << '\t'<< en_sum / N_mc << '\t' << '\t'
+	     << sqrt(sigma_en) / N_mc << endl; 
+	     // printing energy to file "Energy.dat"
+    f1out << h[0] << '\t' << '\t'<< mx/(sys_size*N_mc) << '\t'<< '\t' 
+          <<  my/(sys_size*N_mc) << '\t' << '\t' <<  mz/(sys_size*N_mc) 
+          << '\t'<< '\t' << sqrt(sigma_mx)/(sys_size*N_mc)<< '\t'<< '\t' 
+          << sqrt(sigma_my)/(sys_size*N_mc)<< '\t'<< '\t' 
+          << sqrt(sigma_mz)/(sys_size*N_mc)  << endl;
+          // printing magnetization to file "mag.dat"
+    mx=0; my=0;mz=0;
         }
         
-        //gout.close();
-        fout.close();
+    //gout.close();
+    fout.close();
 	f1out.close();
 	return 0;
 }
