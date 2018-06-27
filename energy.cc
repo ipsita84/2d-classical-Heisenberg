@@ -189,7 +189,7 @@ int main(int argc, char const * argv[])
             sigma_mz += (mz_array[i] - my/ N_mc) * (mz_array[i] - mz/ N_mc) ;
         }
 
-        fout.setf( ios_base::fixed );
+        fout.setf( ios_base::fixed, ios_base::floatfield );
         fout.precision(1);
         fout << h[0];
         fout.precision(5);
@@ -198,7 +198,7 @@ int main(int argc, char const * argv[])
              << sqrt(sigma_en) / N_mc << endl;
         // printing energy to file "Energy.dat"
 
-        f1out.setf( ios_base::fixed );
+        f1out.setf( ios_base::fixed, ios_base::floatfield );
         f1out.precision(1);
         f1out << h[0];
         f1out.precision(5);
