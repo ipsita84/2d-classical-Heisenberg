@@ -191,7 +191,7 @@ int main(int argc, char const * argv[])
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
         fout.precision(1);
-        fout << h[0];
+        fout << setw(5) << h[0];
         fout.precision(5);
         fout << setw(15)
              << en_sum / N_mc << setw(15)
@@ -200,7 +200,7 @@ int main(int argc, char const * argv[])
 
         f1out.setf( ios_base::fixed, ios_base::floatfield );
         f1out.precision(1);
-        f1out << h[0];
+        f1out << setw(5) << h[0];
         f1out.precision(5);
         f1out << setw(15) << mx/(sys_size*N_mc)
               << setw(15) << sqrt(sigma_mx)/(sys_size*N_mc)
