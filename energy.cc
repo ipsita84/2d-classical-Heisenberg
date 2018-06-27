@@ -7,6 +7,7 @@
 //J, axis1, axis2, N_mc
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <ctime>
 #include <boost/multi_array.hpp>
@@ -34,7 +35,7 @@ const unsigned int axis1 = 10, axis2 = axis1;
 const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e5;
+const unsigned int N_mc = 1e2;
 
 const double beta=1;
 
@@ -51,7 +52,7 @@ int main(int argc, char const * argv[])
         array_2d J(boost::extents[3][3]);
         double mx=0, my=0, mz=0;
         std::array <double, 3> h = {0,0,0};
-        std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
+        //std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 
 	//Read the random signed bonds for a particular stored realization
 	ifstream gin("J1.dat");
@@ -95,7 +96,7 @@ int main(int argc, char const * argv[])
        for (unsigned int hsteps=0; hsteps<1000; ++hsteps)
         {    h[0] = 20 + hsteps*0.5; energy = energy_tot(sitespin, J, h);
 	     en_sum =0; 
-
+             std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 		for (unsigned int i = 1; i <=1e5+N_mc; ++i)
 		{
 			for (unsigned int j = 1; j <= sys_size; ++j)
@@ -117,11 +118,11 @@ int main(int argc, char const * argv[])
                 double s0 = sitespin[0][row][col];
                 double s1 = sitespin[1][row][col];
                 double s2 = sitespin[2][row][col];
-				double energy_old =energy ;
-				double energy_minus_rnd_site =energy_old - nn_energy(sitespin,J,h, row, col);
-				double r1 = 0.5*random_real(0, 1)/beta;
-				double r2 = 0.5*random_real(0, 1)/beta;
-				double r3 = 0.5*random_real(0, 1)/beta;                                
+		double energy_old =energy ;
+		double energy_minus_rnd_site =energy_old - nn_energy(sitespin,J,h, row, col);
+		double r1 = 0.5*random_real(0, 1)/beta;
+		double r2 = 0.5*random_real(0, 1)/beta;
+		double r3 = 0.5*random_real(0, 1)/beta;                                
                 double tot = sqrt( pow( s0+ r1, 2)+pow( s1+ r1, 2)+pow(s2 + r1, 2) );
                 
                 sitespin[0][row][col] = (s0+r1)/tot;
@@ -129,8 +130,8 @@ int main(int argc, char const * argv[])
                 sitespin[2][row][col]= (s2+r3)/tot;
                 double energy_new = energy_minus_rnd_site +  nn_energy(sitespin,J, h,row, col);
                 double energy_diff = energy_new - energy_old;
-				double acc_ratio = exp(-1.0 * energy_diff* beta/200);			
-			    double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
+		double acc_ratio = exp(-1.0 * energy_diff* beta/200);			
+	        double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
 				//Spin flipped if r <= acceptance ratio
 				if (r <= acc_ratio)
 				{ energy = energy_new ;
@@ -155,10 +156,10 @@ int main(int argc, char const * argv[])
                                                 {       
 			                        	          mx += sitespin[0][l][j] ; 
 			                        	          mx_array[i-1e5 -1] += sitespin[0][l][j] ;
-							                      my += sitespin[1][l][j] ; 
-							                      my_array[i-1e5 -1] += sitespin[1][l][j] ;
-							                      mz += sitespin[2][l][j] ; 
-							                      mz_array[i-1e5 -1] += sitespin[2][l][j] ;
+							          my += sitespin[1][l][j] ; 
+							          my_array[i-1e5 -1] += sitespin[1][l][j] ;
+							          mz += sitespin[2][l][j] ; 
+							          mz_array[i-1e5 -1] += sitespin[2][l][j] ;
                  				                 }
        					                }
 
@@ -173,15 +174,26 @@ int main(int argc, char const * argv[])
 		 sigma_my += (my_array[i] - my/ N_mc) * (my_array[i] - my/ N_mc) ; 
 		 sigma_mz += (mz_array[i] - my/ N_mc) * (mz_array[i] - mz/ N_mc) ;
 	  }
-    		  
-	fout << h[0] << '\t' << '\t'<< en_sum / N_mc << '\t' << '\t'
+    	
+	fout.setf( ios_base::fixed );
+	fout.precision(1);
+	fout << h[0];
+	fout.precision(5);
+	fout << setw(15)
+             << en_sum / N_mc << setw(15)
 	     << sqrt(sigma_en) / N_mc << endl; 
 	     // printing energy to file "Energy.dat"
-    f1out << h[0] << '\t' << '\t'<< mx/(sys_size*N_mc) << '\t'<< '\t' 
-          <<  my/(sys_size*N_mc) << '\t' << '\t' <<  mz/(sys_size*N_mc) 
-          << '\t'<< '\t' << sqrt(sigma_mx)/(sys_size*N_mc)<< '\t'<< '\t' 
-          << sqrt(sigma_my)/(sys_size*N_mc)<< '\t'<< '\t' 
-          << sqrt(sigma_mz)/(sys_size*N_mc)  << endl;
+
+	f1out.setf( ios_base::fixed );
+	f1out.precision(1);
+        f1out << h[0];
+	f1out.precision(5);
+        f1out << setw(15) << mx/(sys_size*N_mc)  
+              << setw(15) << sqrt(sigma_mx)/(sys_size*N_mc) 
+              << setw(15) << my/(sys_size*N_mc)
+              << setw(15) << sqrt(sigma_my)/(sys_size*N_mc) 
+	      << setw(15) << mz/(sys_size*N_mc) 
+              << setw(15) << sqrt(sigma_mz)/(sys_size*N_mc)  << endl;
           // printing magnetization to file "mag.dat"
     mx=0; my=0;mz=0;
         }
