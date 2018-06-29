@@ -36,7 +36,7 @@ const unsigned int axis1 = 10, axis2 = axis1;
 const unsigned int sys_size = axis1 * axis2;
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e2;
+const unsigned int N_mc = 1e5;
 
 const double beta=1;
 
@@ -102,8 +102,8 @@ int main(int argc, char const * argv[])
         h[0] = 20 + hsteps*0.5;
         energy = energy_tot(sitespin, J, h);
         en_sum =0;
-        std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0},
-                                  mz_array =  {0};
+        std::array <double, N_mc> energy_array =  {0};
+        std::array <double, N_mc> mx_array={0}, my_array ={0},mz_array ={0};
         for (unsigned int i = 1; i <=1e5+N_mc; ++i)
         {
             for (unsigned int j = 1; j <= sys_size; ++j)
@@ -182,26 +182,26 @@ int main(int argc, char const * argv[])
         double sigma_en = 0, sigma_mx = 0, sigma_my = 0, sigma_mz = 0;
         for (unsigned i=0; i< N_mc; i++)
         {
-            sigma_en += (energy_array[i] - en_sum/ N_mc) * (energy_array[i] - en_sum/ N_mc)
-                        ;
+            sigma_en += (energy_array[i] - en_sum/ N_mc) 
+                        * (energy_array[i] - en_sum/ N_mc);
             sigma_mx += (mx_array[i] - mx/ N_mc) * (mx_array[i] - mx/ N_mc) ;
             sigma_my += (my_array[i] - my/ N_mc) * (my_array[i] - my/ N_mc) ;
             sigma_mz += (mz_array[i] - my/ N_mc) * (mz_array[i] - mz/ N_mc) ;
         }
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
-        fout.precision(1);
-        fout << setw(5) << h[0];
-        fout.precision(5);
+        fout.precision(2);
+        fout << setw(6) << h[0];
+        fout.precision(7);
         fout << setw(15)
              << en_sum / N_mc << setw(15)
              << sqrt(sigma_en) / N_mc << endl;
         // printing energy to file "Energy.dat"
 
         f1out.setf( ios_base::fixed, ios_base::floatfield );
-        f1out.precision(1);
-        f1out << setw(5) << h[0];
-        f1out.precision(5);
+        f1out.precision(2);
+        f1out << setw(6) << h[0];
+        f1out.precision(7);
         f1out << setw(15) << mx/(sys_size*N_mc)
               << setw(15) << sqrt(sigma_mx)/(sys_size*N_mc)
               << setw(15) << my/(sys_size*N_mc)
