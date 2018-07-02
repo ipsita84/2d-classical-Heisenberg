@@ -99,7 +99,7 @@ int main(int argc, char const * argv[])
 
     for (unsigned int hsteps=0; hsteps<1000; ++hsteps)
     {
-        h[0] = 20 + hsteps*0.5;
+        h[2] = 20 + hsteps*0.5;
         energy = energy_tot(sitespin, J, h);
         en_sum =0;
         std::array <double, N_mc> energy_array =  {0};
@@ -191,7 +191,7 @@ int main(int argc, char const * argv[])
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
         fout.precision(2);
-        fout << setw(6) << h[0];
+        fout << setw(6) << h[2];
         fout.precision(7);
         fout << setw(15)
              << en_sum / N_mc << setw(15)
@@ -200,7 +200,7 @@ int main(int argc, char const * argv[])
 
         f1out.setf( ios_base::fixed, ios_base::floatfield );
         f1out.precision(2);
-        f1out << setw(6) << h[0];
+        f1out << setw(6) << h[2];
         f1out.precision(7);
         f1out << setw(15) << mx/(sys_size*N_mc)
               << setw(15) << sqrt(sigma_mx)/(sys_size*N_mc)

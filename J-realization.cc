@@ -25,14 +25,14 @@ int main()
 {
 	array_2d J(boost::extents[3][3]);
 	double j_isotropic =- 20;
-	double sym1 = -200 ;
+	double sym1 = -0 ;
 	double sym2 = -0 ;
 	double sym3 = -0 ;
-	double antisym1 = -0 ;
+	double antisym1 = -200 ;
 	double antisym2 = -0 ;
 	double antisym3 = -0 ;
 
-	ofstream gout("J1.dat");	// Opens a file for output
+	ofstream gout("J2.dat");	// Opens a file for output
 
 
 	J[0][0] = j_isotropic ;
