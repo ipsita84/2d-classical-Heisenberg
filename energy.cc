@@ -57,9 +57,9 @@ int main(int argc, char const * argv[])
     //std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 
     //Read the random signed bonds for a particular stored realization
-    ifstream gin("J1.dat");
-    ofstream f1out("mag1.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy1.dat", std::fstream::app);
+    ifstream gin("J2.dat");
+    ofstream f1out("mag2.dat",std::fstream::app);	// Opens a file for output
+    ofstream fout("Energy2.dat", std::fstream::app);
 
 
     for (unsigned int comp1=0; comp1<3; ++comp1)

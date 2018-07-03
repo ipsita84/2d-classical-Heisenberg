@@ -21,15 +21,15 @@ double j_isotropic =- 20;
 
 
 	J[0][0] = j_isotropic ;
-    J[1][1] = j_isotropic ;
-    J[2][2] = j_isotropic ;
+        J[1][1] = j_isotropic ;
+        J[2][2] = j_isotropic ;
 
 
   	J[0][1] = sym1 +antisym1 ;
-    J[1][0] = sym1 - antisym1 ;
+        J[1][0] = sym1 - antisym1 ;
     
   	J[0][2] = sym2 +antisym2 ;   
-    J[2][0] = sym2 - antisym2 ;
+        J[2][0] = sym2 - antisym2 ;
    
   	J[2][1] = sym3 + antisym3 ;
-    J[1][2] =  sym3 - antisym3;
+        J[1][2] =  sym3 - antisym3;
