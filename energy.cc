@@ -45,7 +45,7 @@ int roll_coin(int a, int b);
 double random_real(int a, int b);
 double energy_tot(array_3d sitespin, array_2d J, std::array <double, 3> h);
 double nn_energy(array_3d sitespin,  array_2d J, std::array <double, 3> h,
-                 unsigned int row, unsigned int col);
+       unsigned int row, unsigned int col);
 
 int main(int argc, char const * argv[])
 {
@@ -57,9 +57,9 @@ int main(int argc, char const * argv[])
     //std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 
     //Read the random signed bonds for a particular stored realization
-    ifstream gin("J2.dat");
-    ofstream f1out("mag2.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy2.dat", std::fstream::app);
+    ifstream gin("J0.dat");
+    ofstream f1out("mag0.dat",std::fstream::app);	// Opens a file for output
+    ofstream fout("Energy0.dat", std::fstream::app);
 
 
     for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -97,9 +97,9 @@ int main(int argc, char const * argv[])
     double en_sum;
     unsigned int moves_accepted(0);
 
-    for (unsigned int hsteps=0; hsteps<1000; ++hsteps)
+    for (unsigned int hsteps=0; hsteps<1050; ++hsteps)
     {
-        h[2] = 20 + hsteps*0.5;
+        h[0] = 0 + hsteps*0.5;
         energy = energy_tot(sitespin, J, h);
         en_sum =0;
         std::array <double, N_mc> energy_array =  {0};
@@ -191,7 +191,7 @@ int main(int argc, char const * argv[])
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
         fout.precision(2);
-        fout << setw(6) << h[2];
+        fout << setw(6) << h[0];
         fout.precision(7);
         fout << setw(15)
              << en_sum / N_mc << setw(15)
@@ -200,7 +200,7 @@ int main(int argc, char const * argv[])
 
         f1out.setf( ios_base::fixed, ios_base::floatfield );
         f1out.precision(2);
-        f1out << setw(6) << h[2];
+        f1out << setw(6) << h[0];
         f1out.precision(7);
         f1out << setw(15) << mx/(sys_size*N_mc)
               << setw(15) << sqrt(sigma_mx)/(sys_size*N_mc)
