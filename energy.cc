@@ -58,8 +58,8 @@ int main(int argc, char const * argv[])
 
     //Read the random signed bonds for a particular stored realization
     ifstream gin("J0.dat");
-    ofstream f1out("mag0.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy0.dat", std::fstream::app);
+    ofstream f1out("mag0-test.dat",std::fstream::app);	// Opens a file for output
+    ofstream fout("Energy0-test.dat", std::fstream::app);
 
 
     for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -91,13 +91,18 @@ int main(int argc, char const * argv[])
             sitespin[2][i][j] = cos(theta);
             //double s= pow(sitespin[0][i][j],2)+pow(sitespin[1][i][j],2) +pow(sitespin[2][i][j],2);
             //cout << s << endl ;
+            double checksum= pow(sitespin[0][i][j],2)
+                               +pow(sitespin[1][i][j],2)
+                               +pow(sitespin[2][i][j],2);
+             if (checksum > 1) {printf (" initial %f error \n", checksum);}
+
         }
     }
     double energy(0);
     double en_sum;
     unsigned int moves_accepted(0);
 
-    for (unsigned int hsteps=0; hsteps<1050; ++hsteps)
+    for (unsigned int hsteps=0; hsteps<1; ++hsteps)
     {
         h[0] = 0 + hsteps*0.5;
         energy = energy_tot(sitespin, J, h);
@@ -127,14 +132,21 @@ int main(int argc, char const * argv[])
                 double s2 = sitespin[2][row][col];
                 double energy_old =energy ;
                 double energy_minus_rnd_site =energy_old - nn_energy(sitespin,J,h, row, col);
-                double r1 = 0.5*random_real(0, 1)/beta;
-                double r2 = 0.5*random_real(0, 1)/beta;
-                double r3 = 0.5*random_real(0, 1)/beta;
-                double tot = sqrt( pow( s0+ r1, 2)+pow( s1+ r1, 2)+pow(s2 + r1, 2) );
+                double r0 = 0.5*random_real(-1, 1)/beta;
+                double r1 = 0.5*random_real(-1, 1)/beta;
+                double r2 = 0.5*random_real(-1, 1)/beta;
+                double tot = pow( s0+r0, 2)+pow( s1+ r1, 2)+pow(s2 + r2, 2);
+                //printf ("tot %f \n",tot);
 
-                sitespin[0][row][col] = (s0+r1)/tot;
-                sitespin[1][row][col] = (s1+r2)/tot;
-                sitespin[2][row][col]= (s2+r3)/tot;
+                sitespin[0][row][col] = (s0+r0)/sqrt(tot);
+                sitespin[1][row][col] = (s1+r1)/sqrt(tot);
+                sitespin[2][row][col]= (s2+r2)/sqrt(tot);
+
+              double checksum= pow(sitespin[0][row][col],2)
+                               +pow(sitespin[1][row][col],2)
+                               +pow(sitespin[2][row][col],2);
+             if (checksum > 1.00001) {printf ("%f error \n", checksum);}
+
                 double energy_new = energy_minus_rnd_site +  nn_energy(sitespin,J, h,row, col);
                 double energy_diff = energy_new - energy_old;
                 double acc_ratio = exp(-1.0 * energy_diff* beta/200);
@@ -154,12 +166,16 @@ int main(int argc, char const * argv[])
 
                 }
                 //gout << i+j << '\t'  << energy << '\t' << moves_accepted << endl;
+              //double checksum= pow(sitespin[0][row][col],2)
+                               //+pow(sitespin[1][row][col],2)
+                              // +pow(sitespin[2][row][col],2);
+             //if (checksum > 1) {printf ("%f error \n", checksum);}
             }
 
             if (i > 1e5)
             {
                 en_sum += energy;
-                energy_array[i-1e5 -1] = energy;
+                energy_array[i-N_mc -1] = energy;
                 //double rat  = 1.0* moves_accepted/(i*sys_size);
                 //gout<< energy << endl;
                 for (unsigned int l = 0; l < axis1; ++l)
@@ -167,11 +183,11 @@ int main(int argc, char const * argv[])
                     for (unsigned int j = 0; j < axis2; ++j)
                     {
                         mx += sitespin[0][l][j] ;
-                        mx_array[i-1e5 -1] += sitespin[0][l][j] ;
+                        mx_array[i-N_mc -1] += sitespin[0][l][j] ;
                         my += sitespin[1][l][j] ;
-                        my_array[i-1e5 -1] += sitespin[1][l][j] ;
+                        my_array[i-N_mc -1] += sitespin[1][l][j] ;
                         mz += sitespin[2][l][j] ;
-                        mz_array[i-1e5 -1] += sitespin[2][l][j] ;
+                        mz_array[i-N_mc -1] += sitespin[2][l][j] ;
                     }
                 }
 
