@@ -58,8 +58,8 @@ int main(int argc, char const * argv[])
 
     //Read the random signed bonds for a particular stored realization
     ifstream gin("J0.dat");
-    ofstream f1out("mag0-test.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy0-test.dat", std::fstream::app);
+    ofstream f1out("mag0_hx.dat",std::fstream::app);	// Opens a file for output
+    ofstream fout("Energy0_hx.dat", std::fstream::app);
 
 
     for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -94,7 +94,7 @@ int main(int argc, char const * argv[])
             double checksum= pow(sitespin[0][i][j],2)
                                +pow(sitespin[1][i][j],2)
                                +pow(sitespin[2][i][j],2);
-             if (checksum > 1) {printf (" initial %f error \n", checksum);}
+             if (checksum > 1.000001) {printf (" initial %f error \n", checksum);}
 
         }
     }
@@ -102,7 +102,7 @@ int main(int argc, char const * argv[])
     double en_sum;
     unsigned int moves_accepted(0);
 
-    for (unsigned int hsteps=0; hsteps<1; ++hsteps)
+    for (unsigned int hsteps=0; hsteps<2000; ++hsteps)
     {
         h[0] = 0 + hsteps*0.5;
         energy = energy_tot(sitespin, J, h);
