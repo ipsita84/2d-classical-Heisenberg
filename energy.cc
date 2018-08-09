@@ -57,9 +57,9 @@ int main(int argc, char const * argv[])
     //std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 
     //Read the random signed bonds for a particular stored realization
-    ifstream gin("J0.dat");
-    ofstream f1out("mag0_hx.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy0_hx.dat", std::fstream::app);
+    ifstream gin("J1.dat");
+    ofstream f1out("mag1_hx.dat",std::fstream::app);	// Opens a file for output
+    ofstream fout("Energy1_hx.dat", std::fstream::app);
 
 
     for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -109,7 +109,8 @@ int main(int argc, char const * argv[])
         en_sum =0;
         std::array <double, N_mc> energy_array =  {0};
         std::array <double, N_mc> mx_array={0}, my_array ={0},mz_array ={0};
-        for (unsigned int i = 1; i <=1e5+N_mc; ++i)
+        unsigned int heating = 1e5;
+        for (unsigned int i = 1; i <=heating + N_mc; ++i)
         {
             for (unsigned int j = 1; j <= sys_size; ++j)
             {
@@ -172,10 +173,10 @@ int main(int argc, char const * argv[])
              //if (checksum > 1) {printf ("%f error \n", checksum);}
             }
 
-            if (i > 1e5)
+            if (i >  heating )
             {
                 en_sum += energy;
-                energy_array[i-N_mc -1] = energy;
+                energy_array[i- heating  -1] = energy;
                 //double rat  = 1.0* moves_accepted/(i*sys_size);
                 //gout<< energy << endl;
                 for (unsigned int l = 0; l < axis1; ++l)
@@ -183,11 +184,11 @@ int main(int argc, char const * argv[])
                     for (unsigned int j = 0; j < axis2; ++j)
                     {
                         mx += sitespin[0][l][j] ;
-                        mx_array[i-N_mc -1] += sitespin[0][l][j] ;
+                        mx_array[i- heating  -1] += sitespin[0][l][j] ;
                         my += sitespin[1][l][j] ;
-                        my_array[i-N_mc -1] += sitespin[1][l][j] ;
+                        my_array[i- heating  -1] += sitespin[1][l][j] ;
                         mz += sitespin[2][l][j] ;
-                        mz_array[i-N_mc -1] += sitespin[2][l][j] ;
+                        mz_array[i- heating  -1] += sitespin[2][l][j] ;
                     }
                 }
 
