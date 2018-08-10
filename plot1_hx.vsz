@@ -1,7 +1,7 @@
 # Veusz saved document (version 2.1.1)
-# Saved at 2018-07-04T06:51:13.834364
+# Saved at 2018-08-09T20:15:41.288447
 
-AddImportPath('/home/ipsita/ongoing-projects/2d-classical-Heisenberg')
+AddImportPath('/home/ipsita/ongoing-projects/kitaev-michael/2d-classical-Heisenberg')
 ImportFile(u'mag1_hx.dat', u'hx mx +- my +- mz +-', ignoretext=True, linked=True)
 Set('colorTheme', u'default-latest')
 Add('page', name=u'page1', autoadd=False)
