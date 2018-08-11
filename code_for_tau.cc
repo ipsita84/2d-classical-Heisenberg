@@ -1,4 +1,4 @@
-// g++ -std=c++11 -Wall -O3 energy.cc -o testo
+// g++ -std=c++11 -Wall -O3 code_for_tau.cc -o testo
 // vim: set ai et cin ts=4 sw=4 tw=80:
 
 //warming up system for first N_mc updates
@@ -102,9 +102,9 @@ int main(int argc, char const * argv[])
     double en_sum;
     unsigned int moves_accepted(0);
 
-    for (unsigned int thetasteps=0; thetasteps<1002; ++thetasteps)
+    for (unsigned int thetasteps=0; thetasteps<101; ++thetasteps)
     {
-        double theta = 0 + thetasteps * pi/1000 ;
+        double theta = 0 + thetasteps * pi/100 ;
         h[0] = 30.0*cos(theta);
         h[2] = 30.0*sin(theta);
         energy = energy_tot(sitespin, J, h);
@@ -168,11 +168,7 @@ int main(int argc, char const * argv[])
                     energy = energy_old ;
 
                 }
-                //gout << i+j << '\t'  << energy << '\t' << moves_accepted << endl;
-              //double checksum= pow(sitespin[0][row][col],2)
-                               //+pow(sitespin[1][row][col],2)
-                              // +pow(sitespin[2][row][col],2);
-             //if (checksum > 1) {printf ("%f error \n", checksum);}
+ 
             }
 
             if (i >  heating )
