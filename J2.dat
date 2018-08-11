@@ -9,7 +9,7 @@
 -20
 
 
-double j_isotropic =- 20;
+        double j_isotropic =- 20;
 	double sym1 = -0 ;
 	double sym2 = -0 ;
 	double sym3 = -0 ;
