@@ -56,10 +56,10 @@ int main(int argc, char const * argv[])
     std::array <double, 3> h = {0,0,0};
     //std::array <double, N_mc> energy_array =  {0}, mx_array =  {0}, my_array =  {0}, mz_array =  {0};
 
-    //Read the random signed bonds for a particular stored realization
-    ifstream gin("J2.dat");
-    ofstream f1out("mag2_theta_hxhz.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy2_theta_hxhz.dat", std::fstream::app);
+    //Read the bonds for a particular stored realization
+    ifstream gin("J1.dat");
+    ofstream f1out("mag1_theta_hxydiag_hz.dat",std::fstream::app);	
+    ofstream fout("Energy1_theta_hxydiag_hz.dat", std::fstream::app);
 
 
     for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -105,7 +105,8 @@ int main(int argc, char const * argv[])
     for (unsigned int thetasteps=0; thetasteps<101; ++thetasteps)
     {
         double theta = 0 + thetasteps * pi/100 ;
-        h[0] = 30.0*cos(theta);
+        h[0] = 30.0*cos(theta)/sqrt(2.0);
+        h[1] = h[0];
         h[2] = 30.0*sin(theta);
         energy = energy_tot(sitespin, J, h);
         en_sum =0;
@@ -217,14 +218,18 @@ int main(int argc, char const * argv[])
         f1out.precision(2);
         f1out << setw(6) << theta;
         f1out.precision(7);
-        f1out << setw(15) << (mx*h[2]-mz*h[0])/(30*sys_size*N_mc)
+        f1out << setw(15)
+              <<(mx*sin(theta)-mz*cos(theta)*sqrt(2))*sqrt(2)/(sys_size*N_mc)
+              << setw(15)
+              <<-(my*sin(theta)-mz*cos(theta)*sqrt(2))*sqrt(2)/(sys_size*N_mc)
               << setw(15) << mx/(sys_size*N_mc)
               << setw(15) << sqrt(sigma_mx)/(sys_size*N_mc)
               << setw(15) << my/(sys_size*N_mc)
               << setw(15) << sqrt(sigma_my)/(sys_size*N_mc)
               << setw(15) << mz/(sys_size*N_mc)
               << setw(15) << sqrt(sigma_mz)/(sys_size*N_mc)  << endl;
-        // printing magnetization to file "mag.dat"
+// printing magnetization to file "mag.dat"
+// \sqrt 2 hz mx - \sqrt 2 hz my- hx \sqrt 2 mz+ hy \sqrt 2 mz
         mx=0;
         my=0;
         mz=0;
